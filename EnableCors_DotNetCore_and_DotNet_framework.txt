@@ -1,0 +1,106 @@
+----------------------------------------
+		Dotnet Core
+----------------------------------------
+
+References
+----------
+https://www.c-sharpcorner.com/article/cors-in-dotnet-core/
+https://www.youtube.com/watch?v=MBpH8sGqrMs
+
+Nuget Packages
+---------------
+Microsoft.AspNetCore.Cors
+
+Startup.cs
+-----------
+Option 1
+---------
+services.AddCors(option => 
+	option.AddDefaultPolicy(
+		builder=>builder.AllowAnyOrigin())                
+	);
+
+app.UseCors();
+
+Option 2
+---------
+services.AddCors(option => 
+	option.AddDefaultPolicy(
+		builder=>builder.WithOrigins("http://localhost:3000"))                
+	);
+
+app.UseCors();
+
+Option 3
+---------
+services.AddCors(option => {
+	//option.AddDefaultPolicy(
+	//    builder => builder.WithOrigins("http://localhost:3000"));
+	option.AddPolicy("myPolicy", builder => builder.WithOrigins("http://localhost:3000"));
+	});
+
+app.UseCors("myPolicy");
+ 
+Option 4
+---------
+ services.AddCors(option => {
+	option.AddPolicy("myPolicy", builder => builder.WithOrigins("http://localhost:3000"));
+	});
+
+ app.UseCors();
+ 
+ endpoints.MapControllers().RequireCors("myPolicy");
+ 
+Option 5
+---------
+services.AddCors(option => {
+	option.AddPolicy("myPolicy", builder => builder.WithOrigins("http://localhost:3000"));
+	});
+
+app.UseCors();
+endpoints.MapControllers();
+
+Controller
+-----------
+[EnableCors("myPolicy")]
+
+----------------------------------------
+		Dotnet Framework
+----------------------------------------
+
+References
+----------
+https://www.youtube.com/watch?v=nsnuIZX1C9A
+
+Nuget Packages
+----------------
+Microsoft.AspNet.WebApi.Cors
+
+Option 1
+---------
+App_Start\WebApiConfig.cs
+-----------------
+EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
+config.EnableCors(cors);
+
+Option 2
+---------
+App_Start\WebApiConfig.cs
+-----------------
+config.EnableCors();
+
+Controller
+------------
+[EnableCorsAttribute("*", "*", "*")]
+
+
+Option 3
+---------
+App_Start\WebApiConfig.cs
+-----------------
+config.EnableCors();
+
+Controller
+------------
+[EnableCors("*","*","*")]
+
